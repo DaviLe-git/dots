@@ -85,4 +85,7 @@ hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
 -- Screenshot
-hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("flameshot gui"))
+-- If you use one monitor , this is fine , but with 2 it will ask to choose the monitor everytime
+--hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("flameshot gui"))
+-- Use this so you dont have to choose everytime , if the monitor is wrong change the value
+hl.bind(mainMod .. " + SHIFT + S", hl.dsp.exec_cmd("flameshot screen -n 1 -e"))
