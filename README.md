@@ -9,7 +9,7 @@ My personal Arch Linux configuration.
 - Shell: Zsh
 - Terminal: Kitty
 - Bar: Quickshell
-- Editor: Neovim
+- Editor: Neovim | VSCodium
 - Launcher: Wofi
 - Notifications: ...
 - Browser: Brave
@@ -20,7 +20,7 @@ hypr/       Hyprland configuration
 quickshell/ Quickshell configuration
 nvim/       Neovim configuration
 kitty/      Kitty configuration
-waybar/     Waybar configuration
+bar-quickshell/     Personalized QuickShell bar
 zsh/        Zsh configuration
 
 ## Installation
