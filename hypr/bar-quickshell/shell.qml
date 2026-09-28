@@ -10,6 +10,18 @@ ShellRoot {
 
         PanelWindow {
             id: bar
+            
+            property color colBg: "#c4040d0d"
+            property color colFg: "#a9b1d6"
+            property color colMuted: "#444b6a"
+            property color colWhite: "#ffefe7"
+            property color colCyan: "#0db9d7"
+            property color colBlue: "#7aa2f7"
+            property color colYellow: "#e0af68"
+            property color colGreen: "#2c6b4d"
+            property color colPurple: '#da86f8'
+            property string fontFamily: "Iosevka Nerd Font"
+            property int fontSize: 15
 
             required property var modelData
             screen: modelData
@@ -80,10 +92,10 @@ ShellRoot {
                 spacing: 8
 
                 Pill {
-                    Layout.alignment: Qt.AlignVCenter 
+                    Layout.alignment: Qt.AlignVCenter
                     icon: ""
                     label: clock.value
-                    iconColor: "#ffefe7"
+                    iconColor: colWhite
                 }
 
                 Workspaces { Layout.alignment: Qt.AlignVCenter}
@@ -98,31 +110,31 @@ ShellRoot {
                 Pill {
                     icon: ""
                     label: cpu.value + "%"
-                    iconColor:  "#cc55f7"
+                    iconColor:  colPurple
                 }
 
                 Pill {
                     icon: ""
                     label: vol.value + "%"
-                    iconColor: "#ffa478"
+                    iconColor: colYellow
                 }
 
                 Pill {
                     icon: ""
                     label: bat.value + "%"
-                    iconColor: "#2c6b4d"
+                    iconColor: colGreen
                 }
 
                 Pill {
                     icon: "󰂯"
                     label: bt.value
-                    iconColor: "#cc55f7"
+                    iconColor: colPurple
                 }
 
                 Pill {
                     icon: ""
                     label: net.value
-                    iconColor: "#ffefe7"
+                    iconColor: colWhite
                 }
             }
         }

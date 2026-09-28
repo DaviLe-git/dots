@@ -1,0 +1,8 @@
+{
+    "Lua.workspace.library": [
+        "/usr/share/hypr/stbus"
+    ],
+    "Lua.diagnostics.globals": [
+        "hl"
+    ]
+}

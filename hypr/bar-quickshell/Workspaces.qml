@@ -22,16 +22,19 @@ RowLayout {
                 Hyprland.focusedWorkspace?.id === (index + 1)
 
             text: index + 1
-
             color: isActive
-                ? '#c4b1fd'
-                : (ws ? "#7aa2f7" : "#444b6a")
-
+                ? colPurple
+                : (ws ? colBlue : colMuted)
             font {
-                pixelSize: 14
+                pixelSize: fontSize
                 bold: true
             }
- 
         }
+    }
+    
+// Why dont work?
+    MouseArea {
+        anchors.fill: parent
+        onClicked: Hyprland.dispatch("workspace" + (index + 1))
     }
 }
