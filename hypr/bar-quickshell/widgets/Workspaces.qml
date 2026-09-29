@@ -1,9 +1,10 @@
 import Quickshell
 import Quickshell.Hyprland
+import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 
-import ".."              // ← NOVO
+import ".."
 
 RowLayout {
     id: workspaces
@@ -13,19 +14,22 @@ RowLayout {
 
     Repeater {
         model: 9
-        Item {
+
+        Rectangle {
             id: wsItem
-            property var ws: Hyprland.workspaces.values.find(
-                w => w.id === index + 1
-            )
-            property bool isActive: Hyprland.focusedWorkspace?.id === (index + 1)
-            implicitWidth:  wsText.implicitWidth
-            implicitHeight: wsText.implicitHeight
+            color: "transparent"
+            Layout.preferredWidth:  16
+            Layout.preferredHeight: 26
+            Layout.alignment:       Qt.AlignVCenter
+
+            property int  wsId:      index + 1
+            property var  ws:        Hyprland.workspaces.values.find(w => w.id === wsId)
+            property bool isActive: Hyprland.focusedWorkspace?.id === wsId
 
             Text {
                 id: wsText
                 anchors.centerIn: parent
-                text:  index + 1
+                text:  wsId
                 color: ma.containsMouse
                     ? Theme.colWhite
                     : (isActive
@@ -37,12 +41,28 @@ RowLayout {
                     bold:      true
                 }
             }
+
             MouseArea {
                 id: ma
                 anchors.fill: parent
-                hoverEnabled: true
-                cursorShape:  Qt.PointingHandCursor
-                onClicked: Hyprland.dispatch("workspace " + (index + 1))
+                hoverEnabled:  true
+                cursorShape:   Qt.PointingHandCursor
+
+                onClicked: (mouse) => {
+                    console.log("[WS] CLICK workspace=" + wsId + " button=" + mouse.button)
+                    if (mouse.button === Qt.LeftButton) {
+                        wsProc.running = true
+                    }
+                } // still not working
+                onPressed: (mouse) => console.log("[WS] PRESSED ws=" + wsId)
+            }
+
+            Process {
+                id: wsProc
+                command: ["hyprctl", "dispatch", "workspace " + wsId]
+                running: false
+
+                onExited: console.log("[WS] hyprctl exit code=" + exitCode + " ws=" + wsId)
             }
         }
     }

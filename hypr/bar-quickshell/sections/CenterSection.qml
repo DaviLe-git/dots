@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 
-import ".."              // ← NOVO
+import ".."
 import "../widgets"
 
 RowLayout {

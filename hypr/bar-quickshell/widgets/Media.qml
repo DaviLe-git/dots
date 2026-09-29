@@ -1,8 +1,8 @@
 import QtQuick
 import Quickshell.Services.Mpris
 
-import ".."              // ← NOVO
-import "../components"   // ← NOVO
+import ".."
+import "../components"
 
 Item {
     id: root
@@ -21,7 +21,7 @@ Item {
         maxLabelWidth: 400
         iconColor: Theme.colCyan
         label: root.player
-            ? `${root.player.trackArtist || "Unknown"} - ${root.player.trackTitle || ""}`
+            ? `${root.player.trackArtist || "󰒲 "} - ${root.player.trackTitle || "Nothing Playing"}`
             : ""
     }
 }

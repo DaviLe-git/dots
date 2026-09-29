@@ -1,7 +1,7 @@
 import QtQuick
 
-import ".."              // ← NOVO
-import "../components"   // ← NOVO
+import ".."
+import "../components"
 
 Item {
     id: root
