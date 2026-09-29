@@ -1,0 +1,8 @@
+Clock Clock.qml
+Cpu Cpu.qml
+Battery Battery.qml
+Bluetooth Bluetooth.qml
+Network Network.qml
+Media Media.qml
+Volume Volume.qml
+Workspaces Workspaces.qml

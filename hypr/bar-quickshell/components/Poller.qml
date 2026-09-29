@@ -6,8 +6,8 @@ Scope {
     id: root
 
     property string command: ""
-    property int interval: 3000
-    property string value: ""
+    property int    interval: 3000
+    property string value:   ""
 
     Process {
         id: proc
@@ -22,8 +22,7 @@ Scope {
     Timer {
         interval: root.interval
         running: true
-        repeat: true
-
+        repeat:  true
         onTriggered: proc.running = true
     }
 }
