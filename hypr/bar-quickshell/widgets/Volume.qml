@@ -44,8 +44,8 @@ Item {
 
         icon:      root.volIcon
         label:     root.isMuted ? "Muted" : (root.currentVol + "%")
-        iconColor: root.isMuted ? Theme.colMuted : Theme.colYellow
-
+        //iconColor: root.isMuted ? Theme.colMuted : Theme.colYellow // Dynamic Color
+        iconColor: Theme.colYellow
         onClicked: (mouse) => {}
         onWheel:   (dir)   => (dir > 0 ? upProc : downProc).running = true
     }
@@ -64,7 +64,8 @@ Item {
 
             Text {
                 text:  root.volIcon
-                color: root.isMuted ? Theme.colMuted : Theme.colYellow
+                //color: root.isMuted ? Theme.colMuted : Theme.colYellow // Dynamic Color
+                color: Theme.colYellow
                 font.family:    Theme.fontFamily
                 font.pixelSize: Theme.fontSize
             }
