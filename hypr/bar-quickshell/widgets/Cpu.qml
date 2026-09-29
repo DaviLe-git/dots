@@ -21,4 +21,15 @@ Item {
         label:     cpuPoller.value + "%"
         iconColor: Theme.colPurple
     }
+
+    MouseArea{
+        id: cpu_ma
+        anchors.fill: parent
+        hoverEnabled: true
+        cursorShape: Qt.PointingHandCursor
+    
+    onClicked:{
+        // opens htop
+    }
+    }
 }

@@ -9,6 +9,10 @@ Scope {
     property int    interval: 3000
     property string value:   ""
 
+    function refresh() {
+        if (!proc.running) proc.running = true
+    }
+
     Process {
         id: proc
         command: ["sh", "-c", root.command]

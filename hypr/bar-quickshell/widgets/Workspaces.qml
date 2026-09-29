@@ -49,12 +49,9 @@ RowLayout {
                 cursorShape:   Qt.PointingHandCursor
 
                 onClicked: {
-                    console.log("[WS] CLICK " + wsId)
                     if (wsItem.ws) wsItem.ws.activate()
                     else Hyprland.dispatch("workspace " + wsId)
                 }
-
-                onPressed: (mouse) => console.log("[WS] PRESSED ws=" + wsId)
             }
         }
     }
