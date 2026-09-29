@@ -1,4 +1,5 @@
 import QtQuick
+import Quickshell.Io
 
 import ".."
 import "../components"
@@ -22,14 +23,16 @@ Item {
         iconColor: Theme.colPurple
     }
 
+    Process{
+        id: bt
+        command: ["kitty","-e","htop"]
+    }
+
     MouseArea{
-        id: cpu_ma
         anchors.fill: parent
         hoverEnabled: true
         cursorShape: Qt.PointingHandCursor
+        onClicked: bt.running = true
     
-    onClicked:{
-        // opens htop
-    }
     }
 }
