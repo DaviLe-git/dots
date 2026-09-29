@@ -17,7 +17,7 @@ Item {
     Pill {
         id: pill
         anchors.fill: parent
-        icon:      ""
+        icon:      ""
         label:     clockPoller.value
         iconColor: Theme.colWhite
     }

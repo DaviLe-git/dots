@@ -19,7 +19,7 @@ Item {
         id: clickablePill
         anchors.fill: parent
 
-        icon:  ""
+        icon:  ""
         label: volPoller.value === "M" ? "M" : (volPoller.value + "%")
         iconColor: Theme.colYellow
 
