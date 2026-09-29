@@ -9,7 +9,7 @@ import ".."
 RowLayout {
     id: workspaces
     spacing: Theme.sectionSpacing
-    implicitWidth:  childrenRect.width
+    //implicitWidth:  childrenRect.width
     implicitHeight: 30
 
     Repeater {
@@ -48,21 +48,13 @@ RowLayout {
                 hoverEnabled:  true
                 cursorShape:   Qt.PointingHandCursor
 
-                onClicked: (mouse) => {
-                    console.log("[WS] CLICK workspace=" + wsId + " button=" + mouse.button)
-                    if (mouse.button === Qt.LeftButton) {
-                        wsProc.running = true
-                    }
-                } // still not working
+                onClicked: {
+                    console.log("[WS] CLICK " + wsId)
+                    if (wsItem.ws) wsItem.ws.activate()
+                    else Hyprland.dispatch("workspace " + wsId)
+                }
+
                 onPressed: (mouse) => console.log("[WS] PRESSED ws=" + wsId)
-            }
-
-            Process {
-                id: wsProc
-                command: ["hyprctl", "dispatch", "workspace " + wsId]
-                running: false
-
-                onExited: console.log("[WS] hyprctl exit code=" + exitCode + " ws=" + wsId)
             }
         }
     }
