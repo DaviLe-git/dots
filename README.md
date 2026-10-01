@@ -8,20 +8,17 @@ My personal Arch Linux configuration.
 - WM: Hyprland
 - Shell: Zsh
 - Terminal: Kitty
-- Bar: Quickshell
+- Bar: shell.qml
 - Editor: Neovim | VSCodium
 - Launcher: Wofi
-- Notifications: ...
+- Notifications: notifications.qml
 - Browser: Brave
 
 ## Structure
 
 hypr/       Hyprland configuration
-quickshell/ Quickshell configuration
-nvim/       Neovim configuration
-kitty/      Kitty configuration
-bar-quickshell/     Personalized QuickShell bar
-zsh/        Zsh configuration
+  quickshell/ Quickshell configuration
+  Notifications.qml Notification daemon
 
 ## Installation
 
