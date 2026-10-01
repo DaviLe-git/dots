@@ -17,9 +17,9 @@ My personal Arch Linux configuration.
 ## Structure
 ```
 hypr/       Hyprland configuration
-  quickshell/ Quickshell configuration
-  modules/ Hyprland modules
-  Notifications.qml Notification daemon
+  quickshell/   Quickshell configuration
+  modules/      Hyprland modules
+  Notifications.qml   Notification daemon
 ```
 ## Installation
 
