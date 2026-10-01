@@ -9,6 +9,11 @@ import QtQuick.Layouts
 
 Scope{
     id: root
+    
+    Variants{
+        model: Quickshell.screens
+    }
+
     NotificationServer{
         id: notificationServer
         actionsSupported: true
@@ -20,8 +25,10 @@ Scope{
             n.tracked = true}
     }
     PanelWindow{
+        screen: modelData //You can explicitly set screen: Quickshell.screens[0] (or another index) to pin it to a specific display.
+        
         anchors {top:true; right: true}
-        margins {top: 12; right: 12}
+        margins {top: 50; right: 18}
 
         implicitHeight: Math.max(1, column.implicitHeight)
         implicitWidth: 300
@@ -42,7 +49,7 @@ Scope{
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: layout.implicitHeight + 20
-                    radius: 8
+                    radius: 6
                     color: Theme.colBg
                     border.width: 2
                     border.color: modelData.urgency == NotificationUrgency.Critical ? Theme.colRed : Theme.colPurple
