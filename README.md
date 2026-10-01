@@ -15,12 +15,12 @@ My personal Arch Linux configuration.
 - Browser: Brave
 
 ## Structure
-
+```
 hypr/       Hyprland configuration
   quickshell/ Quickshell configuration
   modules/ Hyprland modules
   Notifications.qml Notification daemon
-
+```
 ## Installation
 
 Clone the repository:
