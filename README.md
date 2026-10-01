@@ -18,6 +18,7 @@ My personal Arch Linux configuration.
 
 hypr/       Hyprland configuration
   quickshell/ Quickshell configuration
+  modules/ Hyprland modules
   Notifications.qml Notification daemon
 
 ## Installation
