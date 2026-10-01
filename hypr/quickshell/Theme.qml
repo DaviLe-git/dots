@@ -11,6 +11,7 @@ QtObject {
     readonly property color colYellow: "#e0af68"
     readonly property color colGreen:  "#2c6b4d"
     readonly property color colPurple: "#da86f8"
+    readonly property color colRed: '#ff3c4c'
 
     readonly property string fontFamily: "Iosevka Nerd Font"
     readonly property int    fontSize:    15
