@@ -46,6 +46,12 @@ Scope{
                 delegate: Rectangle{
                     id: card
                     required property var modelData
+                    
+                    Timer{
+                        running: modelData.urgency !== NotificationUrgency.Critical
+                        interval: 5000
+                        onTriggered: card.modelData.dismiss()
+                    }
 
                     Layout.fillWidth: true
                     Layout.preferredHeight: layout.implicitHeight + 20
@@ -78,7 +84,7 @@ Scope{
                                 text: card.modelData.summary
                                 color: Theme.colBlue
                                 font.family: Theme.fontFamily
-                                font.pixelSize: Theme.fontSize
+                                font.pixelSize: Theme.fontSize + 1
                                 font.bold: true
                                 elide: Text.ElideRight
                             
@@ -88,7 +94,7 @@ Scope{
                                 Layout.fillWidth: true
                                 visible: text !== ""
                                 text: card.modelData.body
-                                color: Theme.colBlue
+                                color: Theme.colWhite
                                 font.family: Theme.fontFamily
                                 font.pixelSize: Theme.fontSize - 1
                                 wrapMode: Text.WordWrap
