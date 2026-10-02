@@ -26,7 +26,6 @@ Scope{
     }
     PanelWindow{
         screen: modelData //You can explicitly set screen: Quickshell.screens[0] (or another index) to pin it to a specific display.
-        
         anchors {top:true; right: true}
         margins {top: 50; right: 18}
 
