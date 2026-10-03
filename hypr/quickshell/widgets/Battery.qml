@@ -13,7 +13,13 @@ Item {
         id: battery
         command: "cat /sys/class/power_supply/BAT0/capacity"
         interval: 30000
-        // Must add a notification when battery is low ( with notify-send -u critical ), when is charging (also change icon maybe?) , not charging etc;
+        // when is charging (also change icon maybe?) , not charging etc;
+    }
+
+    Poller{
+        id: status
+        command: "cat /sys/class/power_supply/BAT0/status"
+        interval: 8000
     }
 
     Process {
@@ -40,7 +46,8 @@ Item {
     Pill {
         id: pill
         anchors.fill: parent
-        icon:      ""
+        //icon:      ""
+        icon: status.value === "Not charging" ? "" : "󱐋"
         label:     battery.value + "%"
         iconColor: Theme.colGreen
     }
