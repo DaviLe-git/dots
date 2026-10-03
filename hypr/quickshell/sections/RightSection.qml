@@ -11,4 +11,5 @@ RowLayout {
     Battery  {}
     Bluetooth {}
     Network  {}
+    Config {}
 }

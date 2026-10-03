@@ -6,3 +6,4 @@ Network Network.qml
 Media Media.qml
 Volume Volume.qml
 Workspaces Workspaces.qml
+Config Config.qml
