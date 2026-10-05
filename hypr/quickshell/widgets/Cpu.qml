@@ -6,8 +6,8 @@ import "../components"
 
 Item {
     id: root
-    implicitWidth:  pill.implicitWidth
-    implicitHeight: pill.implicitHeight
+    implicitWidth:  clickablePill.implicitWidth
+    implicitHeight: clickablePill.implicitHeight
 
     Poller {
         id: cpuPoller
@@ -15,24 +15,18 @@ Item {
         interval: 3000
     }
 
-    Pill {
-        id: pill
-        anchors.fill: parent
-        icon:      ""
-        label:     cpuPoller.value + "%"
-        iconColor: Theme.colPurple
-    }
-
     Process{
         id: bt
         command: ["kitty","-e","htop"]
     }
 
-    MouseArea{
+    ClickablePill{
+        id: clickablePill
         anchors.fill: parent
-        hoverEnabled: true
-        cursorShape: Qt.PointingHandCursor
+        
+        icon:      ""
+        label:     cpuPoller.value + "%"
+        iconColor: Theme.colPurple
         onClicked: bt.running = true
-    
     }
 }

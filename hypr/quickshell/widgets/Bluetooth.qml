@@ -6,23 +6,15 @@ import "../components"
 
 Item {
     id: root
-    implicitWidth:  pill.implicitWidth
-    implicitHeight: pill.implicitHeight
+    implicitWidth:  clickablePill.implicitWidth
+    implicitHeight: clickablePill.implicitHeight
 
     Poller {
         id: btPoller
         command: "bluetoothctl show | grep -q 'Powered: yes' && echo on || echo off"
         interval: 5000
     }
-
-    Pill {
-        id: pill
-        anchors.fill: parent
-        icon:      "󰂯"
-        label:     btPoller.value
-        iconColor: Theme.colPurple
-    }
-
+    
     Process {
         id: btToggle
         command: ["sh", "-c",
@@ -30,10 +22,13 @@ Item {
         onExited: btPoller.refresh()
     }
 
-    MouseArea {
+    ClickablePill{
+        id: clickablePill
         anchors.fill: parent
-        hoverEnabled: true
-        cursorShape:  Qt.PointingHandCursor
-        onClicked:    btToggle.running = true
+        icon: "󰂯"
+        label: btPoller.value
+        iconColor: Theme.colPurple
+
+        onClicked: btToggle.running = true
     }
 }
