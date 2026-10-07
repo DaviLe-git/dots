@@ -24,7 +24,8 @@ Item {
             icon: root.hovered ? "" : "󰍜"
             iconColor: Theme.colWhite
         }
-        Pill{
+        
+        ClickablePill{
             id: lockbutton
             icon: "󰌾"
             visible: root.hovered
@@ -42,7 +43,7 @@ Item {
                 }
             }
         }
-        Pill{
+        ClickablePill{
             id: powerbutton
             icon: "󰐥"
             visible: root.hovered
