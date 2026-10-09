@@ -43,12 +43,13 @@ Item {
         }
     }
 
-    Pill {
+    ClickablePill {
         id: pill
         anchors.fill: parent
         //icon:      ""
         icon: status.value === "Not charging" ? "" : "󱐋"
         label:     battery.value + "%"
         iconColor: Theme.colGreen
+        // have to add the button , and figure out what is gonna do
     }
 }
