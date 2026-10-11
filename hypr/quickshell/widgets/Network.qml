@@ -43,7 +43,7 @@ Item {
         isOffline ? "󱛅" :
         isVpnActive ? (isWifi ? "VPN" : "VPN") :
         isWifi ? "" :
-        isEthernet ? "󰈀" : ""
+        isEthernet ? "󰈀" : "󱛅"
     property color  iconColor:
         isOffline   ? Theme.colMuted :
         isVpnActive ? Theme.colGreen :
