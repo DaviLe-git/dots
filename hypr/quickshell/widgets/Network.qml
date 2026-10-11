@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import Quickshell
 
 import ".."
 import "../components"
@@ -28,10 +29,9 @@ Item {
     }
 
     Poller {
-        id: vpnIpPoller
-        // have to fix it
-        command: "dev=$(nmcli -t -f DEVICE,TYPE connection show --active | grep -iE 'vpn|wireguard' | head -n1 | cut -d: -f1); [ -n \"$dev\" ] && ip -4 addr show \"$dev\" 2>/dev/null | grep -oP '(?<=inet )\\d+\\.\\d+\\.\\d+\\.\\d+' | head -n1 || echo ''"
-        interval: 10000
+    id: vpnIpPoller
+    command: "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"
+    interval: 10000
     }
 
     property bool isOffline:    namePoller.value === "" || namePoller.value === "(none)"
@@ -72,7 +72,6 @@ Item {
         command: ["sh", "-c", "[ \"$(nmcli -t -f WIFI general)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on"]
     }
 
-    // ---- visual + interaction
     ClickablePill {
         id: clickablePill
         anchors.fill: parent
@@ -81,20 +80,22 @@ Item {
         label:     root.netLabel
         iconColor: root.iconColor
 
-
-        // Its not working 
         onClicked: (mouse) => {
-            // copy ip if its VPN , not working
+            // still not working
             if (root.isVpnActive) {
                 if (vpnIpPoller.value !== "") {
                     copyIpProc.command = ["wl-copy", vpnIpPoller.value]
                     runProc(copyIpProc)
                     console.log("[NET] copied VPN IP to clipboard: " + vpnIpPoller.value)
+                    
+                    Quickshell.execDetached(["notify-send", "IP copied to clipboard", vpnIpPoller.value])
                 }
             }
 
             else{
                 runProc(swichtProc)
+                // no notification?
+                Quickshell.execDetached(["notify-send", "Network toggled", "test"])
             }
         }
         onWheel: (dir) => {}
