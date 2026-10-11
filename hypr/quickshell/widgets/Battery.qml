@@ -13,7 +13,6 @@ Item {
         id: battery
         command: "cat /sys/class/power_supply/BAT0/capacity"
         interval: 30000
-        // when is charging (also change icon maybe?) , not charging etc;
     }
 
     Poller{

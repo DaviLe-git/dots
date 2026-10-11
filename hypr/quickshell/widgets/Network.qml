@@ -39,7 +39,6 @@ Item {
     property bool isWifi:       typePoller.value.indexOf("wireless") !== -1
     property bool isEthernet:   typePoller.value.indexOf("ethernet") !== -1
 
-        //  must check in interval 
     property string netIcon:
         isOffline ? "󱛅" :
         isVpnActive ? (isWifi ? "VPN" : "VPN") :
@@ -57,11 +56,20 @@ Item {
         namePoller.value !== "" ? namePoller.value :
         "—"
 
+    // (re)start a Process — stopping it first makes repeat invocations reliable
+    function runProc(proc) {
+        proc.running = false
+        proc.running = true
+    }
+
     // ---- clipboard helper
     Process {
         id: copyIpProc
-        property string ip: ""
-        command: ["sh", "-c", "echo -n '" + ip + "' | wl-copy"]
+    }
+
+    Process {
+        id: swichtProc
+        command: ["sh", "-c", "[ \"$(nmcli -t -f WIFI general)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on"]
     }
 
     // ---- visual + interaction
@@ -73,15 +81,22 @@ Item {
         label:     root.netLabel
         iconColor: root.iconColor
 
-        // Clique: só quando VPN está ativa (copia IP local)
+
+        // Its not working 
         onClicked: (mouse) => {
-            if (root.isVpnActive && vpnIpPoller.value !== "") {
-                copyIpProc.ip = vpnIpPoller.value
-                copyIpProc.running = true
-                console.log("[NET] copied VPN IP to clipboard: " + vpnIpPoller.value)
+            // copy ip if its VPN , not working
+            if (root.isVpnActive) {
+                if (vpnIpPoller.value !== "") {
+                    copyIpProc.command = ["wl-copy", vpnIpPoller.value]
+                    runProc(copyIpProc)
+                    console.log("[NET] copied VPN IP to clipboard: " + vpnIpPoller.value)
+                }
+            }
+
+            else{
+                runProc(swichtProc)
             }
         }
-
         onWheel: (dir) => {}
     }
 }
