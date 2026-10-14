@@ -81,7 +81,7 @@ Item {
         iconColor: root.iconColor
 
         onClicked: (mouse) => {
-            // still not working
+            // still not working , i have to test it
             if (root.isVpnActive) {
                 if (vpnIpPoller.value !== "") {
                     copyIpProc.command = ["wl-copy", vpnIpPoller.value]
@@ -94,8 +94,7 @@ Item {
 
             else{
                 runProc(swichtProc)
-                // no notification?
-                Quickshell.execDetached(["notify-send", "Network toggled", "test"])
+                Quickshell.execDetached(["notify-send", "Network toggled", ":)"])
             }
         }
         onWheel: (dir) => {}
