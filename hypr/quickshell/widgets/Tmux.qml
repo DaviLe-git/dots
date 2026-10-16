@@ -9,12 +9,18 @@ Item {
     implicitHeight: pill.implicitHeight
     implicitWidth: pill.implicitWidth
 
+    Poller{
+        id: tmuxPoller
+        command: ""
+        interval: 10000
+    }
+
     Pill{
         id: pill
         anchors.fill: parent
 
-        icon: "test"
-        label: "test1"
+        icon: ""
+        label: "0"
         iconColor: Theme.colWhite
     }
 }
