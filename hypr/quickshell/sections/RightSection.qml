@@ -6,7 +6,7 @@ import "../widgets"
 
 RowLayout {
     spacing: Theme.sectionSpacing
-    //Tmux    {}
+    Tmux    {}
     Cpu      {}
     Volume   {}
     Battery  {}
