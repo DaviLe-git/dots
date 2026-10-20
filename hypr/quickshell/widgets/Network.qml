@@ -10,68 +10,95 @@ Item {
     implicitWidth:  clickablePill.implicitWidth
     implicitHeight: clickablePill.implicitHeight
 
-    Poller {
+    // ---------- Estados brutos ----------
+    property string _rawName:  ""
+    property string _rawTypes: ""
+    property string _rawVpnIp: ""
+
+    // ---------- Pollers (Process + SplitParser + Timer) ----------
+
+    // Nome da conexão ativa — comando original simples
+    Process {
         id: namePoller
-        command: "nmcli -t -f NAME connection show --active | head -n1"
-        interval: 5000
+        command: ["sh", "-c", "nmcli -t -f NAME connection show --active | head -n1"]
+        stdout: SplitParser {
+            onRead: (line) => { root._rawName = line.trim() }
+        }
     }
+    Timer { interval: 5000; repeat: true; running: true; onTriggered: namePoller.running = true }
 
-    Poller {
+    // TODOS os tipos ativos, agregados com vírgula
+    // Ex: "ethernet"  /  "wireless"  /  "ethernet,wireless,vpn"
+    // Evita o bug do `head -n1` que sempre pegava ethernet
+    Process {
         id: typePoller
-        command: "nmcli -t -f TYPE connection show --active | head -n1"
-        interval: 5000
+        command: ["sh", "-c", "nmcli -t -f TYPE connection show --active | paste -sd ',' -"]
+        stdout: SplitParser {
+            onRead: (line) => { root._rawTypes = line.trim() }
+        }
+    }
+    Timer { interval: 5000; repeat: true; running: true; onTriggered: typePoller.running = true }
+
+    // IP do túnel VPN — comando original
+    Process {
+        id: vpnIpPoller
+        command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"]
+        stdout: SplitParser {
+            onRead: (line) => { root._rawVpnIp = line.trim() }
+        }
+    }
+    Timer { interval: 10000; repeat: true; running: true; onTriggered: vpnIpPoller.running = true }
+
+    // Disparo inicial único
+    Component.onCompleted: {
+        namePoller.running  = true
+        typePoller.running  = true
+        vpnIpPoller.running = true
     }
 
-    Poller {
-        id: vpnPoller
-        command: "nmcli -t -f TYPE connection show --active | grep -qE 'vpn|wireguard' && echo 1 || echo 0"
-        interval: 5000
-    }
-
-    Poller {
-    id: vpnIpPoller
-    command: "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"
-    interval: 10000
-    }
-
-    property bool isOffline:    namePoller.value === "" || namePoller.value === "(none)"
-    property bool isVpnActive:  vpnPoller.value === "1"
-    property bool isWifi:       typePoller.value.indexOf("wireless") !== -1
-    property bool isEthernet:   typePoller.value.indexOf("ethernet") !== -1
+    // ---------- Estado derivado ----------
+    property bool isOffline:    _rawTypes === ""
+    property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
+    property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
+    property bool isVpnActive:  _rawTypes.indexOf("vpn") !== -1
+                               || _rawTypes.indexOf("wireguard") !== -1
 
     property string netIcon:
-        isOffline ? "󱛅" :
-        isVpnActive ? (isWifi ? "VPN" : "VPN") :
-        isWifi ? "" :
-        isEthernet ? "󰈀" : "󱛅"
-    property color  iconColor:
-        isOffline   ? Theme.colMuted :
-        isVpnActive ? Theme.colGreen :
-        isWifi      ? Theme.colWhite :
-        isEthernet ? Theme.colBlue : Theme.colWhite
+        isOffline    ? "󱛅" :
+        isVpnActive  ? (isWifi ? "test" : "test1") :
+        isWifi       ? "" :
+        isEthernet   ? "󰈀" :
+        ""
+    property color iconColor:
+        isOffline    ? Theme.colMuted  :
+        isVpnActive  ? Theme.colGreen :
+        isWifi       ? Theme.colWhite  :
+        isEthernet   ? Theme.colBlue   :
+        Theme.colWhite
 
     property string netLabel:
-        isOffline   ? "Offline" :
-        isVpnActive && !isWifi && !isEthernet ? "VPN" :
-        namePoller.value !== "" ? namePoller.value :
+        isOffline    ? "Offline" :
+        isVpnActive  ? "VPN" :
+        _rawName     ? _rawName :
         "—"
 
-    // (re)start a Process — stopping it first makes repeat invocations reliable
-    function runProc(proc) {
-        proc.running = false
-        proc.running = true
+    // ---------- Helpers ----------
+    function copyToClipboard(text) {
+        if (!text) return
+        Quickshell.execDetached(["sh", "-c", "printf '%s' " + JSON.stringify(text) + " | wl-copy"])
+        Quickshell.execDetached(["notify-send", "IP copied to clipboard", text])
+        console.log("[NET] copied VPN IP: " + text)
     }
 
-    // ---- clipboard helper
-    Process {
-        id: copyIpProc
+    function toggleWifi() {
+        Quickshell.execDetached([
+            "sh", "-c",
+            "[ \"$(nmcli -t -f WIFI general)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on"
+        ])
+        Quickshell.execDetached(["notify-send", "Network toggled", ":)"])
     }
 
-    Process {
-        id: swichtProc
-        command: ["sh", "-c", "[ \"$(nmcli -t -f WIFI general)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on"]
-    }
-
+    // ---------- UI ----------
     ClickablePill {
         id: clickablePill
         anchors.fill: parent
@@ -81,22 +108,26 @@ Item {
         iconColor: root.iconColor
 
         onClicked: (mouse) => {
-            // still not working , i have to test it
             if (root.isVpnActive) {
-                if (vpnIpPoller.value !== "") {
-                    copyIpProc.command = ["wl-copy", vpnIpPoller.value]
-                    runProc(copyIpProc)
-                    console.log("[NET] copied VPN IP to clipboard: " + vpnIpPoller.value)
-                    
-                    Quickshell.execDetached(["notify-send", "IP copied to clipboard", vpnIpPoller.value])
+                if (root._rawVpnIp !== "") {
+                    root.copyToClipboard(root._rawVpnIp)
+                } else {
+                    Quickshell.execDetached(["notify-send", "No VPN IP found", ""])
                 }
-            }
-
-            else{
-                runProc(swichtProc)
-                Quickshell.execDetached(["notify-send", "Network toggled", ":)"])
+            } else {
+                root.toggleWifi()
             }
         }
         onWheel: (dir) => {}
+    }
+
+    // ---------- Debug overlay (remova depois) ----------
+    Text {
+        anchors.top: parent.bottom
+        anchors.horizontalCenter: parent.horizontalCenter
+        text: "types:[" + root._rawTypes + "] name:[" + root._rawName + "] ip:[" + root._rawVpnIp + "]"
+        color: "red"
+        font.pixelSize: 8
+        z: 999
     }
 }
