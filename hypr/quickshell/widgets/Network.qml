@@ -1,6 +1,5 @@
 import QtQuick
 import Quickshell.Io
-import Quickshell
 
 import ".."
 import "../components"
@@ -10,14 +9,11 @@ Item {
     implicitWidth:  clickablePill.implicitWidth
     implicitHeight: clickablePill.implicitHeight
 
-    // ---------- Estados brutos ----------
     property string _rawName:  ""
     property string _rawTypes: ""
     property string _rawVpnIp: ""
 
-    // ---------- Pollers (Process + SplitParser + Timer) ----------
 
-    // Nome da conexão ativa — comando original simples
     Process {
         id: namePoller
         command: ["sh", "-c", "nmcli -t -f NAME connection show --active | head -n1"]
@@ -27,9 +23,6 @@ Item {
     }
     Timer { interval: 5000; repeat: true; running: true; onTriggered: namePoller.running = true }
 
-    // TODOS os tipos ativos, agregados com vírgula
-    // Ex: "ethernet"  /  "wireless"  /  "ethernet,wireless,vpn"
-    // Evita o bug do `head -n1` que sempre pegava ethernet
     Process {
         id: typePoller
         command: ["sh", "-c", "nmcli -t -f TYPE connection show --active | paste -sd ',' -"]
@@ -39,7 +32,6 @@ Item {
     }
     Timer { interval: 5000; repeat: true; running: true; onTriggered: typePoller.running = true }
 
-    // IP do túnel VPN — comando original
     Process {
         id: vpnIpPoller
         command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"]
@@ -49,14 +41,12 @@ Item {
     }
     Timer { interval: 10000; repeat: true; running: true; onTriggered: vpnIpPoller.running = true }
 
-    // Disparo inicial único
     Component.onCompleted: {
         namePoller.running  = true
         typePoller.running  = true
         vpnIpPoller.running = true
     }
 
-    // ---------- Estado derivado ----------
     property bool isOffline:    _rawTypes === ""
     property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
     property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
@@ -82,7 +72,6 @@ Item {
         _rawName     ? _rawName :
         "—"
 
-    // ---------- Helpers ----------
     function copyToClipboard(text) {
         if (!text) return
         Quickshell.execDetached(["sh", "-c", "printf '%s' " + JSON.stringify(text) + " | wl-copy"])
@@ -98,7 +87,6 @@ Item {
         Quickshell.execDetached(["notify-send", "Network toggled", ":)"])
     }
 
-    // ---------- UI ----------
     ClickablePill {
         id: clickablePill
         anchors.fill: parent
@@ -121,13 +109,4 @@ Item {
         onWheel: (dir) => {}
     }
 
-    // ---------- Debug overlay (remova depois) ----------
-    Text {
-        anchors.top: parent.bottom
-        anchors.horizontalCenter: parent.horizontalCenter
-        text: "types:[" + root._rawTypes + "] name:[" + root._rawName + "] ip:[" + root._rawVpnIp + "]"
-        color: "red"
-        font.pixelSize: 8
-        z: 999
-    }
-}
+} 
