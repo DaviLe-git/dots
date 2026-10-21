@@ -39,13 +39,22 @@ Item {
     // its not working
     Process {
         id: vpnIpPoller
-        command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"] // this works
+        command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"]
         stdout: SplitParser {
-            onRead: (line) => { root._rawVpnIp = line.trim() }
+            onRead: (line) => {
+                root._rawVpnIp = line.trim()
+                console.log("[NET] vpn ip: " + line.trim())   // debug: remove later
+            }
         }
     }
 
-    Timer { interval: 10000; repeat: true; running: true; onTriggered: vpnIpPoller.running = true }
+    Timer {
+        interval: 10000; repeat: true; running: true
+        onTriggered: {
+            root._rawVpnIp = ""
+            vpnIpPoller.running = true
+        }
+    }
 
     Component.onCompleted: {
         namePoller.running  = true
@@ -56,7 +65,9 @@ Item {
     property bool isOffline:    _rawTypes === ""
     property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
     property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
-    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1 || _rawTypes.indexOf("wireguard") !== -1 // fixed 
+    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1
+                            || _rawTypes.indexOf("vpn")       !== -1
+                            || _rawTypes.indexOf("wireguard") !== -1 // fixed 
 
     property string netIcon:
         isOffline    ? "󱛅" :
@@ -77,21 +88,25 @@ Item {
         _rawName     ? _rawName :
         "—"
 
+    //working now
     function copyToClipboard(text) {
         if (!text) return
-        Quickshell.execDetached(["sh", "-c", "printf '%s' " + JSON.stringify(text) + " | wl-copy"]) // this command dont return nothing
+        Quickshell.execDetached(["wl-copy", text])
         Quickshell.execDetached(["notify-send", "IP copied to clipboard", text])
         console.log("[NET] copied VPN IP: " + text)
     }
 
-    // probably not working
     function toggleWifi() {
-        Quickshell.execDetached([
-            "sh", "-c",
-            "[ \"$(nmcli -t -f WIFI general)\" = enabled ] && nmcli radio wifi off || nmcli radio wifi on"
+        console.log("[NET] toggling wifi")
+        Quickshell.execDetached(["sh", "-c",
+            'if [ "$(nmcli radio wifi)" = enabled ]; then ' +
+            'nmcli radio wifi off && notify-send "Wi-Fi" "Disabled"; ' +
+            'else ' +
+            'nmcli radio wifi on && notify-send "Wi-Fi" "Enabled"; ' +
+            'fi'
         ])
-        Quickshell.execDetached(["notify-send", "Network toggled", ":)"])
     }
+
 
     ClickablePill {
         id: clickablePill
