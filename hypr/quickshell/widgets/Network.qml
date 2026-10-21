@@ -1,5 +1,6 @@
 import QtQuick
 import Quickshell.Io
+import Quickshell
 
 import ".."
 import "../components"
@@ -13,7 +14,7 @@ Item {
     property string _rawTypes: ""
     property string _rawVpnIp: ""
 
-
+    // working
     Process {
         id: namePoller
         command: ["sh", "-c", "nmcli -t -f NAME connection show --active | head -n1"]
@@ -21,24 +22,29 @@ Item {
             onRead: (line) => { root._rawName = line.trim() }
         }
     }
+
     Timer { interval: 5000; repeat: true; running: true; onTriggered: namePoller.running = true }
 
     Process {
         id: typePoller
         command: ["sh", "-c", "nmcli -t -f TYPE connection show --active | paste -sd ',' -"]
+
         stdout: SplitParser {
             onRead: (line) => { root._rawTypes = line.trim() }
         }
     }
+
     Timer { interval: 5000; repeat: true; running: true; onTriggered: typePoller.running = true }
 
+    // its not working
     Process {
         id: vpnIpPoller
-        command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"]
+        command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"] // this works
         stdout: SplitParser {
             onRead: (line) => { root._rawVpnIp = line.trim() }
         }
     }
+
     Timer { interval: 10000; repeat: true; running: true; onTriggered: vpnIpPoller.running = true }
 
     Component.onCompleted: {
@@ -50,18 +56,17 @@ Item {
     property bool isOffline:    _rawTypes === ""
     property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
     property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
-    property bool isVpnActive:  _rawTypes.indexOf("vpn") !== -1
-                               || _rawTypes.indexOf("wireguard") !== -1
+    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1 || _rawTypes.indexOf("wireguard") !== -1 // fixed 
 
     property string netIcon:
         isOffline    ? "󱛅" :
-        isVpnActive  ? (isWifi ? "test" : "test1") :
+        isVpnActive  ? (isWifi ? "" : "test1") :
         isWifi       ? "" :
-        isEthernet   ? "󰈀" :
-        ""
+        isEthernet   ? "󰈀" : ""
+    
     property color iconColor:
         isOffline    ? Theme.colMuted  :
-        isVpnActive  ? Theme.colGreen :
+        isVpnActive  ? Theme.colWhite :
         isWifi       ? Theme.colWhite  :
         isEthernet   ? Theme.colBlue   :
         Theme.colWhite
@@ -74,11 +79,12 @@ Item {
 
     function copyToClipboard(text) {
         if (!text) return
-        Quickshell.execDetached(["sh", "-c", "printf '%s' " + JSON.stringify(text) + " | wl-copy"])
+        Quickshell.execDetached(["sh", "-c", "printf '%s' " + JSON.stringify(text) + " | wl-copy"]) // this command dont return nothing
         Quickshell.execDetached(["notify-send", "IP copied to clipboard", text])
         console.log("[NET] copied VPN IP: " + text)
     }
 
+    // probably not working
     function toggleWifi() {
         Quickshell.execDetached([
             "sh", "-c",
@@ -98,15 +104,17 @@ Item {
         onClicked: (mouse) => {
             if (root.isVpnActive) {
                 if (root._rawVpnIp !== "") {
-                    root.copyToClipboard(root._rawVpnIp)
+                    root.copyToClipboard(root._rawVpnIp) //its not coping
                 } else {
                     Quickshell.execDetached(["notify-send", "No VPN IP found", ""])
                 }
             } else {
-                root.toggleWifi()
+                root.toggleWifi() //its not sending notification , and its not turning off
             }
-        }
+            
+            }
+
         onWheel: (dir) => {}
     }
 
-} 
+}
