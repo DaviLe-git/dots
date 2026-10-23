@@ -10,12 +10,14 @@ Item {
     // { done, prio, created, due, display, raw }
     property var tasks: []
         Component.onCompleted: console.log("[todo] store iniciado. path =", todoPath)
-    function tasksForDate(d) {
+        function tasksForDate(d) {
         const key = Qt.formatDate(d, "yyyy-MM-dd");
         const res = [];
         for (let i = 0; i < tasks.length; i++) {
             const t = tasks[i];
-            if (t.due === key || t.created === key) res.push(t);
+            if (t.due === key || t.created === key
+                || (t.created === null && t.due === null))   // ← sem data → todos os dias
+                res.push(t);
         }
         return res;
     }

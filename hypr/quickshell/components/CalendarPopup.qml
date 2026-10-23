@@ -21,7 +21,7 @@ Rectangle {
     readonly property color colSelectedFg: Theme.colRed
     readonly property color colAccent:     Theme.colYellow
     readonly property color colOverdue:    Theme.colRed
-    readonly property color colDone:       Theme.colMuted
+    readonly property color colDone:       Theme.colWhite
 
     
     readonly property int pad: 14
@@ -194,8 +194,10 @@ Rectangle {
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 3
                             width: 5; height: 5; radius: 2.5
-                            visible: root.store && cell.valid
-                                     && root.store.tasksForDate(cell.cellDate).length > 0
+                            visible: root.store && cell.valid && root.store.tasksForDate(cell.cellDate).some(
+                                t => t.created !== null || t.due !== null)
+                            //visible: root.store && cell.valid
+                                    && root.store.tasksForDate(cell.cellDate).length > 0
                             color: root.dotColor(cell.cellDate)
                         }
 
@@ -216,8 +218,8 @@ Rectangle {
                 width: parent.width
                 horizontalAlignment: Text.AlignHCenter
                 text: root.dayNamesShort[root.selectedDate.getDay()] + " "
-                      + root.monthNamesShort[root.selectedDate.getMonth()] + " "
-                      + root.selectedDate.getDate()
+                    + root.monthNamesShort[root.selectedDate.getMonth()] + " "
+                    + root.selectedDate.getDate()
                 color: root.colAccent
                 font.pixelSize: 13
                 font.weight: Font.Medium
