@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-
+import Quickshell.Io
 import ".."
 import "../components"
 
@@ -15,10 +15,17 @@ Item {
         interval: 6000
     }
 
+    TodoStore { id: todoStore }   // todoPath: "/path/custom/todo.txt" if needed
+
+    Process {
+        id: tuxedoProc
+        command: ["kitty", "-e", "tuxedo"]
+    }
+
     ClickablePill {
         id: pill
         anchors.fill: parent
-        icon:      ""
+        icon:      ""
         label:     clockPoller.value
         iconColor: Theme.colWhite
         onClicked: calPopup.visible = !calPopup.visible
@@ -32,16 +39,21 @@ Item {
         implicitWidth:  cal.implicitWidth
         implicitHeight: cal.implicitHeight
 
-        // abre abaixo do pill, centralizado nele
         anchor.item: pill
         anchor.edges: Edges.Bottom
         anchor.gravity: Edges.Bottom
         anchor.margins.top: 8
-        // anchor.adjustment: PopupAdjustment.Flip // descomente se sair da tela
+        // anchor.adjustment: PopupAdjustment.Flip // descomente se cortar na borda
 
-        // ao abrir, mostra o mês do dia selecionado
         onVisibleChanged: if (visible) cal.resetToSelected()
 
-        CalendarPopup { id: cal }
+        CalendarPopup {
+            id: cal
+            store: todoStore
+            onOpenEditor: {
+                console.log("[clock] botão tuxedo clicado");
+                tuxedoProc.exec(tuxedoProc.command);   
+            }
+        }
     }
 }
