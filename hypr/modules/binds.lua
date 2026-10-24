@@ -24,10 +24,10 @@ hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
-hl.bind(
-    mainMod .. " + W",
-    hl.dsp.exec_cmd("kitty --class wallpaper-picker -e /home/x/.local/bin/wallpaper-picker.sh")
-)
+--hl.bind(mainMod .. " + W",hl.dsp.exec_cmd("kitty --class wallpaper-picker -e /home/x/.local/bin/wallpaper-picker.sh"))
+hl.bind(mainMod .. " + W",hl.dsp.exec_cmd("kitty --class wallpaper-picker -e ~/.local/bin/wallpaper-picker.sh"))
+
+
 -- Brightnessctl
 hl.bind(mainMod .. " + F2", hl.dsp.exec_cmd("brightnessctl set 10%-"))
 hl.bind(mainMod .. " + F3", hl.dsp.exec_cmd("brightnessctl set +10%"))

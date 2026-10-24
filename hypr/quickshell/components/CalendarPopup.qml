@@ -227,6 +227,7 @@ Rectangle {
         }
 
         // tasks panel
+        // have to fix: The tasks already done still shows; Have to update it
         Item {
             id: panel
             width: root.panelW
