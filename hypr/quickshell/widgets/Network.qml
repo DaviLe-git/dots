@@ -124,7 +124,7 @@ Item {
                     Quickshell.execDetached(["notify-send", "No VPN IP found", ""])
                 }
             } else {
-                root.toggleWifi() //its not sending notification , and its not turning off
+                root.toggleWifi() 
             }
             
             }
