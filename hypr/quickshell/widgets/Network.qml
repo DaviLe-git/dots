@@ -25,6 +25,7 @@ Item {
 
     Timer { interval: 5000; repeat: true; running: true; onTriggered: namePoller.running = true }
 
+    // some times doesnt work
     Process {
         id: typePoller
         command: ["sh", "-c", "nmcli -t -f TYPE connection show --active | paste -sd ',' -"]
@@ -33,10 +34,9 @@ Item {
             onRead: (line) => { root._rawTypes = line.trim() }
         }
     }
-
     Timer { interval: 5000; repeat: true; running: true; onTriggered: typePoller.running = true }
 
-    // its not working
+    
     Process {
         id: vpnIpPoller
         command: ["sh", "-c", "ip -4 -o addr show | awk '$2 ~ /^(tun|tap|wg|ppp)/ { print $4; exit }' | cut -d/ -f1"]
@@ -65,9 +65,8 @@ Item {
     property bool isOffline:    _rawTypes === ""
     property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
     property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
-    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1
-                            || _rawTypes.indexOf("vpn")       !== -1
-                            || _rawTypes.indexOf("wireguard") !== -1 // fixed 
+    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1 || _rawTypes.indexOf("vpn") !== -1|| _rawTypes.indexOf("wireguard") !== -1 // fixed
+    
 
     property string netIcon:
         isOffline    ? "󱛅" :
@@ -119,12 +118,12 @@ Item {
         onClicked: (mouse) => {
             if (root.isVpnActive) {
                 if (root._rawVpnIp !== "") {
-                    root.copyToClipboard(root._rawVpnIp) //its not coping
+                    root.copyToClipboard(root._rawVpnIp) 
                 } else {
                     Quickshell.execDetached(["notify-send", "No VPN IP found", ""])
                 }
             } else {
-                root.toggleWifi() 
+                root.toggleWifi()
             }
             
             }

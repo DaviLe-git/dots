@@ -9,10 +9,9 @@ import QtQuick.Layouts
 
 Scope{
     id: root
-    
-    Variants{
-        model: Quickshell.screens
-    }
+    //property int screenIndex: 0
+
+    property int screenIndex: parseInt(Quickshell.env("QS_SCREEN") || "0")
 
     NotificationServer{
         id: notificationServer
@@ -24,8 +23,9 @@ Scope{
             console.log("got:", n.summary, "---", n.body)
             n.tracked = true}
     }
+    // still in the wrong monitor :)
     PanelWindow{
-        screen: modelData //You can explicitly set screen: Quickshell.screens[0] (or another index) to pin it to a specific display.
+        screen: Quickshell.screens[Math.min(root.screenIndex, Quickshell.screens.length - 1)]
         anchors {top:true; right: true}
         margins {top: 50; right: 18}
 
@@ -34,6 +34,7 @@ Scope{
         color: "transparent"
 
         exclusionMode: ExclusionMode.Ignore
+        focusable: false
 
         ColumnLayout{
             id: column
@@ -47,7 +48,7 @@ Scope{
                     required property var modelData
                     
                     Timer{
-                        running: modelData.urgency !== NotificationUrgency.Critical
+                        running: card.modelData.urgency !== NotificationUrgency.Critical
                         interval: 5000
                         onTriggered: card.modelData.dismiss()
                     }
@@ -71,7 +72,10 @@ Scope{
                             Layout.alignment: Qt.AlignTop
                             fillMode: Image.PreserveAspectFit
                             visible: source.toString() !== ""
-                            source: card.modelData.image || card.modelData.appIcon || ""
+                            //source: card.modelData.image || card.modelData.appIcon || "" // old version
+                            source: card.modelData.image
+                                    ? "file://" + card.modelData.image
+                                    : (card.modelData.appIcon || "") //new
                         }
 
                         ColumnLayout{
