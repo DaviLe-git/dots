@@ -4,14 +4,16 @@ import Quickshell
 import Quickshell.Services.Notifications
 import QtQuick
 import QtQuick.Layouts
+import Quickshell.Hyprland
 
 // To work properly: Kill your notification daemon
 
 Scope{
     id: root
-    //property int screenIndex: 0
 
-    property int screenIndex: parseInt(Quickshell.env("QS_SCREEN") || "0")
+    HyprlandMonitor{
+        id: 1
+    }
 
     NotificationServer{
         id: notificationServer
@@ -23,9 +25,8 @@ Scope{
             console.log("got:", n.summary, "---", n.body)
             n.tracked = true}
     }
-    // still in the wrong monitor :)
+    // i think its working
     PanelWindow{
-        screen: Quickshell.screens[Math.min(root.screenIndex, Quickshell.screens.length - 1)]
         anchors {top:true; right: true}
         margins {top: 50; right: 18}
 
