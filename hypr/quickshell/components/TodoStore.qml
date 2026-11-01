@@ -15,9 +15,13 @@ Item {
         const res = [];
         for (let i = 0; i < tasks.length; i++) {
             const t = tasks[i];
-            if (t.due === key || t.created === key
-                || (t.created === null && t.due === null))   // ← sem data → todos os dias
+            if (t.due !== null) {
+                // com due → só no dia agendado (concluída aparece riscada, histórico)
+                if (t.due === key) res.push(t);
+            } else if (!t.done) {
+                // sem due e pendente → todos os dias
                 res.push(t);
+            }
         }
         return res;
     }

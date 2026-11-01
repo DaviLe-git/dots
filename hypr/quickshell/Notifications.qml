@@ -4,31 +4,28 @@ import Quickshell
 import Quickshell.Services.Notifications
 import QtQuick
 import QtQuick.Layouts
-import Quickshell.Hyprland
 
-// To work properly: Kill your notification daemon
-
-Scope{
+Scope {
     id: root
 
-    HyprlandMonitor{
-        id: 1
-    }
-
-    NotificationServer{
+    NotificationServer {
         id: notificationServer
         actionsSupported: true
         bodySupported: true
         imageSupported: true
 
         onNotification: n => {
-            console.log("got:", n.summary, "---", n.body)
-            n.tracked = true}
+            console.log("got:", n.summary, "---", n.body);
+            n.tracked = true;
+        }
     }
-    // i think its working
-    PanelWindow{
-        anchors {top:true; right: true}
-        margins {top: 50; right: 18}
+
+    PanelWindow {
+        // troque "DP-1" pelo nome do seu monitor (hyprctl monitors)
+        screen: Quickshell.screens.find(s => s.name === "DP-1")
+
+        anchors { top: true; right: true }
+        margins { top: 50; right: 18 }
 
         implicitHeight: Math.max(1, column.implicitHeight)
         implicitWidth: 300
@@ -37,18 +34,19 @@ Scope{
         exclusionMode: ExclusionMode.Ignore
         focusable: false
 
-        ColumnLayout{
+        ColumnLayout {
             id: column
             width: parent.width
             spacing: 10
 
-            Repeater{
+            Repeater {
                 model: notificationServer.trackedNotifications
-                delegate: Rectangle{
+
+                delegate: Rectangle {
                     id: card
                     required property var modelData
-                    
-                    Timer{
+
+                    Timer {
                         running: card.modelData.urgency !== NotificationUrgency.Critical
                         interval: 5000
                         onTriggered: card.modelData.dismiss()
@@ -59,31 +57,31 @@ Scope{
                     radius: 6
                     color: Theme.colBg
                     border.width: 2
-                    border.color: modelData.urgency == NotificationUrgency.Critical ? Theme.colRed : Theme.colPurple
-                
-                    RowLayout{
+                    border.color: card.modelData.urgency === NotificationUrgency.Critical
+                                   ? Theme.colRed : Theme.colPurple
+
+                    RowLayout {
                         id: layout
                         anchors.fill: parent
                         anchors.margins: 10
                         spacing: 10
 
-                        Image{
+                        Image {
                             Layout.preferredHeight: 36
                             Layout.preferredWidth: 36
                             Layout.alignment: Qt.AlignTop
                             fillMode: Image.PreserveAspectFit
                             visible: source.toString() !== ""
-                            //source: card.modelData.image || card.modelData.appIcon || "" // old version
                             source: card.modelData.image
                                     ? "file://" + card.modelData.image
-                                    : (card.modelData.appIcon || "") //new
+                                    : (card.modelData.appIcon || "")
                         }
 
-                        ColumnLayout{
+                        ColumnLayout {
                             Layout.fillWidth: true
                             spacing: 2
 
-                            Text{
+                            Text {
                                 Layout.fillWidth: true
                                 text: card.modelData.summary
                                 color: Theme.colBlue
@@ -91,10 +89,9 @@ Scope{
                                 font.pixelSize: Theme.fontSize + 1
                                 font.bold: true
                                 elide: Text.ElideRight
-                            
                             }
 
-                            Text{
+                            Text {
                                 Layout.fillWidth: true
                                 visible: text !== ""
                                 text: card.modelData.body
@@ -104,16 +101,14 @@ Scope{
                                 wrapMode: Text.WordWrap
                             }
                         }
-                }
+                    }
 
-                MouseArea{
-                    anchors.fill: parent
-                    onClicked: card.modelData.dismiss()
-                }
-
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: card.modelData.dismiss()
+                    }
                 }
             }
         }
     }
 }
-
