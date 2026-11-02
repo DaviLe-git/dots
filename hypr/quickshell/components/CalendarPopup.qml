@@ -194,8 +194,7 @@ Rectangle {
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 3
                             width: 5; height: 5; radius: 2.5
-                                                        visible: root.store && cell.valid
-                                     && root.store.tasksForDate(cell.cellDate).some(t => t.due !== null)
+                            visible: root.store && cell.valid && root.store.tasksForDate(cell.cellDate).some(t => t.due !== null)
                             //visible: root.store && cell.valid
                                     && root.store.tasksForDate(cell.cellDate).length > 0
                             color: root.dotColor(cell.cellDate)
