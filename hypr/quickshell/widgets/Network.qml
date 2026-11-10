@@ -43,13 +43,13 @@ Item {
         stdout: SplitParser {
             onRead: (line) => {
                 root._rawVpnIp = line.trim()
-                console.log("[NET] vpn ip: " + line.trim())   // debug: remove later
+                //console.log("[NET] vpn ip: " + line.trim())   // debug: remove later
             }
         }
     }
 
     Timer {
-        interval: 10000; repeat: true; running: true
+        interval: 5000; repeat: true; running: true
         onTriggered: {
             root._rawVpnIp = ""
             vpnIpPoller.running = true
@@ -65,8 +65,7 @@ Item {
     property bool isOffline:    _rawTypes === ""
     property bool isWifi:       _rawTypes.indexOf("wireless") !== -1
     property bool isEthernet:   _rawTypes.indexOf("ethernet") !== -1
-    property bool isVpnActive:  _rawTypes.indexOf("tun") !== -1 || _rawTypes.indexOf("vpn") !== -1|| _rawTypes.indexOf("wireguard") !== -1 // fixed
-    
+    property bool isVpnActive:  _rawTypes.indexOf("vpn") !== -1 || _rawTypes.indexOf("tun") !== -1 || _rawTypes.indexOf("wireguard") !== -1 || _rawVpnIp !== ""
 
     property string netIcon:
         isOffline    ? "󱛅" :
