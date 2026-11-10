@@ -37,7 +37,7 @@ Item {
     //triggers immediately
     Component.onCompleted: tmuxProc.running = true
 
-    Pill {
+    ClickablePill {
         id: pill
         anchors.fill: parent
 

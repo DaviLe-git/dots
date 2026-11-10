@@ -14,7 +14,7 @@ Item {
         ?? Mpris.players.values[0]
         ?? null
 
-    Pill {
+    ClickablePill {
         id: pill
         anchors.fill: parent
         icon:      "󰽰"
