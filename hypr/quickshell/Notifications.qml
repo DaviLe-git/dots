@@ -9,11 +9,6 @@ import QtQuick.Layouts
 
 Scope{
     id: root
-    
-    Variants{
-        model: Quickshell.screens
-    }
-
     NotificationServer{
         id: notificationServer
         actionsSupported: true
@@ -24,8 +19,16 @@ Scope{
             console.log("got:", n.summary, "---", n.body)
             n.tracked = true}
     }
+
+    Variants{
+        model: Quickshell.screens
+    
     PanelWindow{
-        screen: modelData //You can explicitly set screen: Quickshell.screens[0] (or another index) to pin it to a specific display.
+        id: popupWindow
+        
+        required property ShellScreen modelData
+        
+        screen: modelData
         anchors {top:true; right: true}
         margins {top: 50; right: 18}
 
@@ -110,4 +113,4 @@ Scope{
             }
         }
     }
-}
+}}
