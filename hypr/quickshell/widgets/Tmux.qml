@@ -34,6 +34,11 @@ Item {
         onTriggered: tmuxProc.running = true
     }
 
+    Process {
+        id: bt
+        command: ["kitty", "-e", "tmux", "attach","-t","0"]
+    }
+
     //triggers immediately
     Component.onCompleted: tmuxProc.running = true
 
@@ -45,5 +50,6 @@ Item {
         label: root.sessionCount.toString()
         visible: root.sessionCount > 0
         iconColor: Theme.colWhite
+        onClicked: bt.running = true
     }
 }
