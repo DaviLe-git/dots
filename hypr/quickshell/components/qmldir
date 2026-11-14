@@ -1,5 +1,6 @@
+
+TodoStore TodoStore.qml
 Pill Pill.qml
 ClickablePill ClickablePill.qml
 Poller Poller.qml
 CalendarPopup CalendarPopup.qml
-TodoStore TodoStore.qml
