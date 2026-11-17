@@ -8,7 +8,7 @@ Scope {
     // ---- configuração ----
     // monitor onde o card aparece (veja os nomes com: hyprctl monitors)
     // se o nome não existir, cai para o 1º monitor da lista
-    property string screenName: "eDP-1"
+    property string screenName: "HDMI-A-1"
     // mostrar o card mesmo sem tarefas no dia
     property bool showWhenEmpty: false
     // esconder sozinho depois de um tempo (false = só sai no "Close")
@@ -62,7 +62,7 @@ Scope {
 
         // só aparece se houver algo para mostrar (e não foi fechado)
         visible: !root.dismissed
-                 && (root.showWhenEmpty || root.todayTasks.length > 0 || root.overdueTasks.length > 0)
+            && (root.showWhenEmpty || root.todayTasks.length > 0 || root.overdueTasks.length > 0)
 
         Rectangle {
             id: card
@@ -87,8 +87,8 @@ Scope {
                     Text {
                         Layout.fillWidth: true
                         text: "Today — " + root.dayNames[root.today.getDay()] + ", "
-                              + root.monthNames[root.today.getMonth()] + " "
-                              + root.today.getDate()
+                            + root.monthNames[root.today.getMonth()] + " "
+                            + root.today.getDate()
                         color: Theme.colWhite
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSize + 2
@@ -97,7 +97,7 @@ Scope {
 
                     Text {
                         text: root.pendingCount === 0 ? "all done"
-                             : root.pendingCount + " pending"
+                            : root.pendingCount + " pending"
                         color: Theme.colYellow
                         font.family: Theme.fontFamily
                         font.pixelSize: Theme.fontSize
@@ -140,7 +140,7 @@ Scope {
                                 Layout.fillWidth: true
                                 visible: root.overdueTasks.length > 0
                                 text: (modelData.prio !== "" ? "(" + modelData.prio + ") " : "")
-                                      + modelData.display
+                                    + modelData.display
                                 color: Theme.colRed
                                 font.family: Theme.fontFamily
                                 font.pixelSize: Theme.fontSize - 1
@@ -194,7 +194,7 @@ Scope {
                                     anchors.verticalCenter: parent.verticalCenter
                                     text: taskRow.modelData.prio
                                     color: taskRow.modelData.prio === "A" ? Theme.colRed
-                                         : taskRow.modelData.prio === "B" ? Theme.colYellow : "#d8c85b"
+                                    : taskRow.modelData.prio === "B" ? Theme.colYellow : "#d8c85b"
                                     font.family: Theme.fontFamily
                                     font.pixelSize: Theme.fontSize - 1
                                     font.bold: true
