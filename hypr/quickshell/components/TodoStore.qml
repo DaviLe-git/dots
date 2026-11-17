@@ -1,8 +1,11 @@
+pragma Singleton
+
 import QtQuick
 import Quickshell
 import Quickshell.Io
 
-Item {
+//Item {
+Singleton{
     id: root
 
     property string todoPath: Quickshell.env("HOME") + "/todo.txt"

@@ -15,7 +15,8 @@ Item {
         interval: 6000
     }
 
-    TodoStore { id: todoStore }   // todoPath: "/path/custom/todo.txt" if needed
+    //TodoStore { id: todoStore }   // todoPath: "/path/custom/todo.txt" if needed
+    StartupTodos { }
 
     Process {
         id: tuxedoProc
