@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 
+import "components"
+
 Item {
     id: taskRow
 

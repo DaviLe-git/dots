@@ -1,5 +1,5 @@
 
-TodoStore TodoStore.qml
+singleton TodoStore TodoStore.qml
 Pill Pill.qml
 ClickablePill ClickablePill.qml
 Poller Poller.qml
