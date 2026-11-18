@@ -16,7 +16,7 @@ Item {
     }
 
     //TodoStore { id: todoStore }   // todoPath: "/path/custom/todo.txt" if needed
-    StartupTodos { }
+    //StartupTodos { }
 
     Process {
         id: tuxedoProc
@@ -50,7 +50,7 @@ Item {
 
         CalendarPopup {
             id: cal
-            store: todoStore
+            store: TodoStore
             onOpenEditor: {
                 console.log("[clock] botão tuxedo clicado");
                 tuxedoProc.exec(tuxedoProc.command);   

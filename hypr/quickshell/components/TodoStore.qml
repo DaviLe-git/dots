@@ -4,6 +4,8 @@ import QtQuick
 import Quickshell
 import Quickshell.Io
 
+import ".."
+
 //Item {
 Singleton{
     id: root
@@ -42,7 +44,8 @@ Singleton{
         } else {
             lines[idx] = "x " + Qt.formatDate(new Date(), "yyyy-MM-dd") + " " + lines[idx];
         }
-        fv.setTextAndFlush(lines.join("\n"));
+        //fv.setTextAndFlush(lines.join("\n"));
+        fv.setText(lines.join("\n"));
     }
 
     function parseTasks() {
@@ -97,7 +100,8 @@ Singleton{
         atomicWrites: true
 
         onLoaded: root.parseTasks()
-        onFileChanged: root.parseTasks()
+        //onFileChanged: root.parseTasks()
+        onFileChanged: fv.reload()
         onLoadFailed: error => console.log("[todo] ERRO ao abrir:", root.todoPath, error)
     }
 }

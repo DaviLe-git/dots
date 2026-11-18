@@ -8,4 +8,5 @@ RowLayout {
     spacing: Theme.sectionSpacing
     Clock      {}
     Workspaces {}
+    StartupTodos {}
 }

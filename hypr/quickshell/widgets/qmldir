@@ -8,3 +8,4 @@ Volume Volume.qml
 Workspaces Workspaces.qml
 Config Config.qml
 Tmux Tmux.qml
+StartupTodos StartupTodos.qml

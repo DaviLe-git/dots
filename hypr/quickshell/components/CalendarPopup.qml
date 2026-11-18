@@ -194,9 +194,7 @@ Rectangle {
                             anchors.bottom: parent.bottom
                             anchors.bottomMargin: 3
                             width: 5; height: 5; radius: 2.5
-                            visible: root.store && cell.valid && root.store.tasksForDate(cell.cellDate).some(t => t.due !== null)
-                            //visible: root.store && cell.valid
-                                    && root.store.tasksForDate(cell.cellDate).length > 0
+                            visible: root.store && root.store.tasks && cell.valid && root.store.tasksForDate(cell.cellDate).some(t => t.due !== null)
                             color: root.dotColor(cell.cellDate)
                         }
 
@@ -234,7 +232,8 @@ Rectangle {
             visible: root.store !== null
 
             readonly property string key: Qt.formatDate(root.selectedDate, "yyyy-MM-dd")
-            property var dayTasks: root.store ? root.store.tasksForDate(root.selectedDate) : []
+            //property var dayTasks: root.store ? root.store.tasksForDate(root.selectedDate) : []
+            property var dayTasks: root.store && root.store.tasks? root.store.tasksForDate(root.selectedDate) : []
 
             Column {
                 id: panelCol
@@ -335,8 +334,7 @@ Rectangle {
                                         anchors.leftMargin: 8
                                         anchors.verticalCenter: parent.verticalCenter
                                         text: taskRow.modelData.prio
-                                        color: taskRow.modelData.prio === "A" ? root.colOverdue
-                                             : taskRow.modelData.prio === "B" ? root.colAccent : "#d8c85b"
+                                        color: taskRow.modelData.prio === "A" ? root.colOverdue: taskRow.modelData.prio === "B" ? root.colAccent : "#d8c85b"
                                         font.pixelSize: 11
                                         font.bold: true
                                     }
