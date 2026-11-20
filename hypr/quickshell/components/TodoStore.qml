@@ -85,8 +85,7 @@ Singleton{
 
                 const display = body.trim().replace(/\s*\bdue:\S+/, "").trim();
 
-                out.push({ done: done, prio: prio, created: created, due: due,
-                display: display, raw: raw });
+                out.push({ done: done, prio: prio, created: created, due: due,display: display, raw: raw });
             }
         }
         root.tasks = out;

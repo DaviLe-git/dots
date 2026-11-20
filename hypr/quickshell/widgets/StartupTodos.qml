@@ -8,8 +8,8 @@ import "components"
 Scope {
     id: root
 
-    // ---- configuração ----
-    property string screenName: "HDMI-A-1"   // nome do monitor: hyprctl monitors
+    // config 
+    property string screenName: "HDMI-A-1"   //  hyprctl monitors
     property bool showWhenEmpty: false    // mostrar card mesmo sem tarefas
     property bool autoHide: false         // esconder sozinho após autoHideMs
     property int autoHideMs: 30000
@@ -21,10 +21,6 @@ Scope {
     readonly property var dayNames: ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"]
     readonly property var monthNames: ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
-    // ==========================================================
-    // FILTROS — cada binding lê TodoStore.tasks DIRETAMENTE na
-    // primeira linha (dependência explícita, re-avalia sempre)
-    // ==========================================================
 
     // atrasadas: due antes de hoje e não concluídas
     readonly property var overdueTasks: {
@@ -32,7 +28,6 @@ Scope {
         const out = [];
         for (let i = 0; i < ts.length; i++) {
             const t = ts[i];
-            //if (!t.done && t.due !== null && t.due < root.todayKey) out.push(t);
             if (!t.done && !!t.due && t.due < root.todayKey) out.push(t);
         }
         return out;
@@ -55,7 +50,6 @@ Scope {
         const out = [];
         for (let i = 0; i < ts.length; i++) {
             const t = ts[i];
-            //if (!t.done && t.due === null) out.push(t);
             if (!t.done && !t.due) out.push(t);
         }
         return out;
@@ -141,7 +135,7 @@ Scope {
                         width: parent.width
                         spacing: 2
 
-                        // ---- ATRASADAS ----
+                        // ATRASADAS 
                         Text {
                             Layout.fillWidth: true
                             visible: root.overdueTasks.length > 0
@@ -172,7 +166,7 @@ Scope {
                             color: Theme.colBorder
                         }
 
-                        // ---- HOJE ----
+                        //HOJE 
                         Text {
                             Layout.fillWidth: true
                             visible: root.dueTodayTasks.length > 0
@@ -200,7 +194,7 @@ Scope {
                             color: Theme.colBorder
                         }
 
-                        // ---- SEM DATA (a seção nova) ----
+                        // SEM DATA
                         Text {
                             Layout.fillWidth: true
                             visible: root.anytimeTasks.length > 0
@@ -223,8 +217,8 @@ Scope {
                         Text {
                             Layout.fillWidth: true
                             visible: root.overdueTasks.length === 0
-                                     && root.dueTodayTasks.length === 0
-                                     && root.anytimeTasks.length === 0
+                                    && root.dueTodayTasks.length === 0
+                                    && root.anytimeTasks.length === 0
                             horizontalAlignment: Text.AlignHCenter
                             text: "No tasks for today"
                             color: Theme.colPurple
@@ -236,13 +230,13 @@ Scope {
                     }
                 }
 
-                // ---- fechar ----
+                //fechar
                 Rectangle {
                     Layout.fillWidth: true
                     Layout.preferredHeight: 32
                     radius: 10
                     color: closeMouse.pressed ? Theme.colHover
-                         : closeMouse.containsMouse ? "#26262b" : "#19191d"
+                        : closeMouse.containsMouse ? "#26262b" : "#19191d"
                     border.color: Theme.colBorder
                     border.width: 1
 
