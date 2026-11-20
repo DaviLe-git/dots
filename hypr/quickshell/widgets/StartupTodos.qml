@@ -32,7 +32,8 @@ Scope {
         const out = [];
         for (let i = 0; i < ts.length; i++) {
             const t = ts[i];
-            if (!t.done && t.due !== null && t.due < root.todayKey) out.push(t);
+            //if (!t.done && t.due !== null && t.due < root.todayKey) out.push(t);
+            if (!t.done && !!t.due && t.due < root.todayKey) out.push(t);
         }
         return out;
     }
@@ -47,13 +48,15 @@ Scope {
         return out;
     }
 
+    // ainda não funciona
     // >>> O NOVO: sem data definida -> podem ser feitas qualquer dia
     readonly property var anytimeTasks: {
         const ts = TodoStore.tasks;
         const out = [];
         for (let i = 0; i < ts.length; i++) {
             const t = ts[i];
-            if (!t.done && t.due === null) out.push(t);
+            //if (!t.done && t.due === null) out.push(t);
+            if (!t.done && !t.due) out.push(t);
         }
         return out;
     }
